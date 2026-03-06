@@ -34,6 +34,7 @@
 html {
     /* Firefox minimal scrollbar */
     scrollbar-width: thin;
+    scroll-behavior: smooth;
     scrollbar-color: #333333 #000000;
 }
 

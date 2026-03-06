@@ -100,6 +100,7 @@ const TiltCard: React.FC<{ children: React.ReactNode; delay: number }> = ({ chil
 
 const CriterionCard: React.FC<(typeof CRITERIA)[number]> = ({ icon, title, description, delay }) => {
 	const [hovered, setHovered] = React.useState(false);
+	const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
 	return (
 		<TiltCard delay={delay}>
@@ -107,7 +108,14 @@ const CriterionCard: React.FC<(typeof CRITERIA)[number]> = ({ icon, title, descr
 			<div
 				onMouseEnter={() => setHovered(true)}
 				onMouseLeave={() => setHovered(false)}
-				className="relative h-full rounded-2xl p-6 sm:p-7 cursor-default select-none overflow-hidden transition-all duration-500"
+				onMouseMove={(e) => {
+					const rect = e.currentTarget.getBoundingClientRect();
+					setMousePos({
+						x: e.clientX - rect.left,
+						y: e.clientY - rect.top
+					});
+				}}
+				className="relative h-full rounded-2xl p-6 sm:p-7 cursor-default select-none overflow-hidden transition-all duration-500 will-change-transform"
 				style={{
 					background: hovered ? "rgba(10, 12, 22, 0.85)" : "rgba(38, 38, 42, 0.75)",
 					backdropFilter: "blur(14px)",
@@ -121,10 +129,17 @@ const CriterionCard: React.FC<(typeof CRITERIA)[number]> = ({ icon, title, descr
 				{/* Gradient glow on hover */}
 				<motion.div
 					className="absolute inset-0 rounded-2xl pointer-events-none"
-					animate={{ opacity: hovered ? 1 : 0 }}
-					transition={{ duration: 0.4 }}
+					animate={{
+						opacity: hovered ? 1 : 0,
+						x: hovered ? "120%" : "-120%"
+					}}
+					transition={{
+						duration: 1.2,
+						ease: "easeInOut"
+					}}
 					style={{
-						background: "linear-gradient(135deg, rgba(250,204,21,0.07) 0%, rgba(236,72,153,0.07) 50%, rgba(99,102,241,0.07) 100%)",
+						background:
+							"linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%)"
 					}}
 				/>
 
@@ -147,7 +162,9 @@ const CriterionCard: React.FC<(typeof CRITERIA)[number]> = ({ icon, title, descr
 					<motion.div
 						className="absolute inset-y-0 left-0 rounded-full"
 						style={{ background: "linear-gradient(90deg, #FACC15, #EC4899, #6366F1)" }}
-						animate={{ width: hovered ? "100%" : "32px" }}
+						animate={{
+							width: hovered ? "100%" : "24px", opacity: hovered ? 1 : 0.7
+						}}
 						transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
 					/>
 				</div>
